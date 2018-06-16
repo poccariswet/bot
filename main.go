@@ -7,83 +7,30 @@ import (
 	"os"
 
 	"github.com/line/line-bot-sdk-go/linebot"
+	"github.com/soeyusuke/bot/auth"
 )
 
-type App struct {
-	bot *linebot.Client
-}
+var bot *linebot.Client
 
 func main() {
-	app, err := NewApp()
+	var err error
+	bot, err = auth.NewBot()
 	if err != nil {
 		fmt.Fprint(os.Stderr, err)
 		os.Exit(1)
 	}
 
-	http.HandleFunc("/callback", app.Callback)
+	http.HandleFunc("/callback", Callback)
 	if err := http.ListenAndServe(":"+os.Getenv("PORT"), nil); err != nil {
-		log.Fatal(err)
+		fmt.Fprint(os.Stderr, err)
+		os.Exit(1)
 	}
 }
 
-func NewApp() (*App, error) {
-	bot, err := linebot.New(
-		os.Getenv("LINE_CHANNEL_SECRET"),
-		os.Getenv("LINE_CHANNEL_TOKEN"),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &App{bot: bot}, nil
-}
-
-func (app *App) Callback(w http.ResponseWriter, req *http.Request) {
-	events, err := app.bot.ParseRequest(req)
-	if err != nil {
-		if err == linebot.ErrInvalidSignature {
-			w.WriteHeader(400)
-		} else {
-			w.WriteHeader(500)
-		}
-		return
-	}
-	for _, event := range events {
-		log.Printf("Got event %v", event)
-		switch event.Type {
-		case linebot.EventTypeMessage:
-			switch message := event.Message.(type) {
-			case *linebot.TextMessage:
-				if err := app.textHandler(message, event.ReplyToken); err != nil {
-					log.Println(err)
-				}
-			}
-
-		case linebot.EventTypePostback:
-			data := event.Postback.Data
-			if data == "DATE" || data == "TIME" || data == "DATETIME" {
-				data += fmt.Sprintf("(%v)", *event.Postback.Params)
-			}
-			if _, err = app.bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(data)).Do(); err != nil {
-				log.Println(err)
-			}
-		}
-	}
-}
-
-func (app *App) textHandler(message *linebot.TextMessage, replyToken string) error {
+func textHandler(message *linebot.TextMessage, replyToken string) error {
 	var msg linebot.Message
 	switch message.Text {
 	case "buttons":
-		t := linebot.NewButtonsTemplate(
-			"",                                                                    // image path
-			"My button sample",                                                    // ButtonsTemplate Title
-			"Hello, my button",                                                    // ButtonsTemplate SubTitle
-			linebot.NewPostbackTemplateAction("1", "push button1", "", "button1"), // (label, data, text, displayText)
-			linebot.NewPostbackTemplateAction("2", "push button2", "", "button2"), // button template can't use text and
-			linebot.NewPostbackTemplateAction("3", "push button3", "", ""),        //displayText don't use at same time
-		)
-		msg = linebot.NewTemplateMessage("buttons template", t)
 
 	case "confirm":
 		t := linebot.NewConfirmTemplate(
@@ -137,7 +84,7 @@ func (app *App) textHandler(message *linebot.TextMessage, replyToken string) err
 		log.Println(message.Text)
 	}
 	if msg != nil {
-		if _, err := app.bot.ReplyMessage(replyToken, msg).Do(); err != nil {
+		if _, err := bot.ReplyMessage(replyToken, msg).Do(); err != nil {
 			return err
 		}
 	}

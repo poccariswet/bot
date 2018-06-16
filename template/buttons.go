@@ -3,14 +3,14 @@ package template
 import "github.com/line/line-bot-sdk-go/linebot"
 
 type Buttons struct {
-	imagePath string
+	ImagePath string
 	Title     string
-	subTitle  string
-	button    []linebot.PostbackTemplateAction
+	SubTitle  string
+	Button    []linebot.TemplateAction
 }
 
-func buttonsTemplate(btn Buttons) *linebot.TemplateMessage {
-	t := linebot.NewButtonsTemplate(btn.imagePath, btn.Title, btn.subTitle, btn.button...)
+func ButtonsTemplate(btn Buttons) *linebot.TemplateMessage {
+	t := linebot.NewButtonsTemplate(btn.ImagePath, btn.Title, btn.SubTitle, btn.Button...)
 	msg := linebot.NewTemplateMessage("buttons template", t)
 	return msg
 }

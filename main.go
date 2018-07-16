@@ -8,13 +8,17 @@ import (
 
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/soeyusuke/bot/auth"
+	"github.com/soeyusuke/bot/template"
 )
 
 var bot *linebot.Client
 
 func main() {
 	var err error
-	bot, err = auth.NewBot()
+	bot, err = auth.NewBot(
+		os.Getenv("LINE_CHANNEL_SECRET"),
+		os.Getenv("LINE_CHANNEL_TOKEN"),
+	)
 	if err != nil {
 		fmt.Fprint(os.Stderr, err)
 		os.Exit(1)
@@ -27,10 +31,13 @@ func main() {
 	}
 }
 
+//TODO: handler をpacckage化？？
 func textHandler(message *linebot.TextMessage, replyToken string) error {
 	var msg linebot.Message
 	switch message.Text {
 	case "buttons":
+		var btn template.Buttons
+		msg = template.ButtonsTemplate(btn)
 
 	case "confirm":
 		t := linebot.NewConfirmTemplate(

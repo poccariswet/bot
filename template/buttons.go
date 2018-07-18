@@ -10,7 +10,13 @@ type Buttons struct {
 }
 
 func ButtonsTemplate(btn Buttons) *linebot.TemplateMessage {
-	t := linebot.NewButtonsTemplate(btn.ImagePath, btn.Title, btn.SubTitle, btn.Button...)
-	msg := linebot.NewTemplateMessage("buttons template", t)
+	//	t := linebot.NewButtonsTemplate(btn.ImagePath, btn.Title, btn.SubTitle, btn.Button...)
+	msg := linebot.NewTemplateMessage("buttons template",
+		&linebot.ButtonsTemplate{
+			ThumbnailImageURL: btn.ImagePath,
+			Title:             btn.Title,
+			Text:              btn.SubTitle,
+			Actions:           btn.Button,
+		})
 	return msg
 }

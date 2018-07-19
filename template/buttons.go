@@ -1,6 +1,8 @@
 package template
 
-import "github.com/line/line-bot-sdk-go/linebot"
+import (
+	"github.com/line/line-bot-sdk-go/linebot"
+)
 
 type Buttons struct {
 	ImagePath string
@@ -9,14 +11,24 @@ type Buttons struct {
 	Button    []linebot.TemplateAction
 }
 
-func ButtonsTemplate(btn Buttons) *linebot.TemplateMessage {
-	//	t := linebot.NewButtonsTemplate(btn.ImagePath, btn.Title, btn.SubTitle, btn.Button...)
-	msg := linebot.NewTemplateMessage("buttons template",
+func NewButtons() Buttons {
+	var btn Buttons
+	btn.ImagePath = "https://avatars1.githubusercontent.com/u/24663217?s=460&v=4"
+	btn.Title = "buttons"
+	btn.SubTitle = "sub_buttons"
+	btn.Button = append(btn.Button, linebot.NewURITemplateAction("Go to line.me", "https://line.me"))
+	btn.Button = append(btn.Button, linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", "", "hello こんにちは"))
+	btn.Button = append(btn.Button, linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは", ""))
+
+	return btn
+}
+
+func (btn *Buttons) ButtonsTemplate() *linebot.TemplateMessage {
+	return linebot.NewTemplateMessage("buttons template",
 		&linebot.ButtonsTemplate{
 			ThumbnailImageURL: btn.ImagePath,
 			Title:             btn.Title,
 			Text:              btn.SubTitle,
 			Actions:           btn.Button,
 		})
-	return msg
 }

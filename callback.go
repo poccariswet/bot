@@ -7,10 +7,6 @@ import (
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
-func postbackHandle(data string) error {
-	return nil
-}
-
 func Callback(w http.ResponseWriter, req *http.Request) {
 	events, err := bot.ParseRequest(req)
 	if err != nil {
@@ -22,8 +18,7 @@ func Callback(w http.ResponseWriter, req *http.Request) {
 	}
 
 	for _, event := range events {
-		//log of event
-		log.Printf("Got event %v", event)
+		log.Printf("Got event %v", event) //log of event
 		switch event.Type {
 		case linebot.EventTypeMessage:
 			switch message := event.Message.(type) {
@@ -35,7 +30,7 @@ func Callback(w http.ResponseWriter, req *http.Request) {
 
 		case linebot.EventTypePostback:
 			data := event.Postback.Data
-			if err := postbackHandle(data); err != nil {
+			if err := postbackHandler(data); err != nil {
 				log.Println(err)
 			}
 		}

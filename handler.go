@@ -7,65 +7,39 @@ import (
 	"github.com/soeyusuke/bot/template"
 )
 
-func postbackHandle(data string) error {
-	return nil
-}
-
 func textHandler(message *linebot.TextMessage, replyToken string) error {
 	var msg linebot.Message
 	switch message.Text {
 	case "buttons":
-		var btn template.Buttons
-		msg = template.ButtonsTemplate(btn)
+		btn := template.NewButtons()
+		msg = btn.ButtonsTemplate()
 
 	case "confirm":
-		t := linebot.NewConfirmTemplate(
-			"Do it?",
-			linebot.NewMessageTemplateAction("Yes", "Yes!"),
-			linebot.NewMessageTemplateAction("No", "No!"),
-		)
-		msg = linebot.NewTemplateMessage("confirm template", t)
+		confirm := template.NewConfirms()
+		msg = confirm.ConfirmsTemplate()
 
 	case "carousel":
-		t := linebot.NewCarouselTemplate(
-			linebot.NewCarouselColumn(
-				"https://avatars0.githubusercontent.com/u/24663217?s=400&v=4",
-				"soeyu",
-				"soeyusuke",
-				linebot.NewURITemplateAction("github", "https://github.com/soeyusuke"),
-				linebot.NewPostbackTemplateAction("Hi", "Nice!!", "", ""),
-			),
-			linebot.NewCarouselColumn(
-				"https://avatars2.githubusercontent.com/u/29530489?s=400&v=4",
-				"test",
-				"test",
-				linebot.NewPostbackTemplateAction("Noo!", "bad word!", "", ""),
-				linebot.NewMessageTemplateAction("gg", "good game"),
-			),
-		)
-		msg = linebot.NewTemplateMessage("carousel template", t)
+		var btns []template.Buttons
+		btns = append(btns, template.NewButtons())
+		btns = append(btns, template.NewButtons())
+		carousel, err := template.NewColumns(btns)
+		if err != nil {
+			return err
+		}
+		msg = carousel.CarouselTemplate()
 
 	case "image carousel":
-		imageURL := "https://tfsassets.azureedge.net/sampletry.jpg"
-		t := linebot.NewImageCarouselTemplate(
-			linebot.NewImageCarouselColumn(
-				imageURL,
-				linebot.NewURITemplateAction("Go to LINE", "https://line.me"),
-			),
-			linebot.NewImageCarouselColumn(
-				imageURL,
-				linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", "", ""),
-			),
-			linebot.NewImageCarouselColumn(
-				imageURL,
-				linebot.NewMessageTemplateAction("Say message", "Rice=米"),
-			),
-			linebot.NewImageCarouselColumn(
-				imageURL,
-				linebot.NewDatetimePickerTemplateAction("datetime", "DATETIME", "datetime", "", "", ""),
-			),
-		)
-		msg = linebot.NewTemplateMessage("image carousel template", t)
+		var col []template.ImageColumns
+		col = append(col, template.NewImageColumns())
+		col = append(col, template.NewImageColumns())
+		col = append(col, template.NewImageColumns())
+
+		c, err := template.NewImageCarousel(col)
+		if err != nil {
+			return err
+		}
+		msg = c.CarouselTemplate()
+
 	default:
 		log.Println(message.Text)
 	}
@@ -74,5 +48,9 @@ func textHandler(message *linebot.TextMessage, replyToken string) error {
 			return err
 		}
 	}
+	return nil
+}
+
+func postbackHandler(data string) error {
 	return nil
 }

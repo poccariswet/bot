@@ -1,5 +1,12 @@
 package template
 
+type Container struct {
+	buble  Buble
+	hero   Hero
+	body   Body
+	footer Footer
+}
+
 var jsonString = `{
   "type": "bubble",
   "hero": {

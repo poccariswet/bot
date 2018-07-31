@@ -24,8 +24,8 @@ type Buttons struct {
 //}
 
 //default fill
-func NewButtons() *Buttons {
-	return &Buttons{
+func NewButtons() Buttons {
+	return Buttons{
 		ImagePath: "https://cdn2.iconfinder.com/data/icons/file-8/128/file_3-512.png",
 		Title:     "title",
 		SubTitle:  "sub title",
@@ -33,12 +33,26 @@ func NewButtons() *Buttons {
 	}
 }
 
+//TODO: Read to some type's file, so put the value in btn (Buttons)
 func (btn *Buttons) Read() error {
 	return nil
 }
 
-func (btn *Buttons) AddButtons() error {
-	return nil
+//TODO: Append the some templatate action to Buttons Button
+func (btn *Buttons) AddButtons(button linebot.TemplateAction) {
+	btn.Button = append(btn.Button, button)
+}
+
+func (btn *Buttons) SetImagePath(imagepath string) {
+	btn.ImagePath = imagepath
+}
+
+func (btn *Buttons) SetTitle(title string) {
+	btn.Title = title
+}
+
+func (btn *Buttons) SetSubTitle(subtitle string) {
+	btn.SubTitle = subtitle
 }
 
 func (btn *Buttons) ButtonsTemplate() *linebot.TemplateMessage {

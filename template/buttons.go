@@ -1,6 +1,8 @@
 package template
 
 import (
+	"errors"
+
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
@@ -11,19 +13,7 @@ type Buttons struct {
 	Button    []linebot.TemplateAction
 }
 
-//func NewButtons() Buttons {
-//	var btn Buttons
-//	btn.ImagePath = "https://avatars1.githubusercontent.com/u/24663217?s=460&v=4"
-//	btn.Title = "buttons"
-//	btn.SubTitle = "sub_buttons"
-//	btn.Button = append(btn.Button, linebot.NewURITemplateAction("Go to line.me", "https://line.me"))
-//	btn.Button = append(btn.Button, linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", "", "hello こんにちは"))
-//	btn.Button = append(btn.Button, linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは", ""))
-//
-//	return btn
-//}
-
-//default fill
+// new default buttons template
 func NewButtons() Buttons {
 	return Buttons{
 		ImagePath: "https://cdn2.iconfinder.com/data/icons/file-8/128/file_3-512.png",
@@ -38,23 +28,37 @@ func (btn *Buttons) Read() error {
 	return nil
 }
 
-//TODO: Append the some templatate action to Buttons Button
-func (btn *Buttons) AddButtons(button linebot.TemplateAction) {
-	btn.Button = append(btn.Button, button)
+// Append the some templatate action to Buttons Button
+func (btn *Buttons) AddButtons(buttons ...linebot.TemplateAction) error {
+	if len(btn.Button) >= 4 {
+		return errors.New("must not be more than 4 items")
+	}
+
+	for _, v := range buttons {
+		btn.Button = append(btn.Button, v)
+	}
+	return nil
 }
 
-func (btn *Buttons) SetImagePath(imagepath string) {
+// set the buttons params
+func (btn *Buttons) SetButtons(imagepath, title, subtitle string, buttons ...linebot.TemplateAction) error {
 	btn.ImagePath = imagepath
-}
-
-func (btn *Buttons) SetTitle(title string) {
 	btn.Title = title
-}
-
-func (btn *Buttons) SetSubTitle(subtitle string) {
 	btn.SubTitle = subtitle
+
+	if len(buttons) > 4 {
+		return errors.New("must not be more than 4 items")
+	}
+
+	btn.Button = nil
+	for _, v := range buttons {
+		btn.Button = append(btn.Button, v)
+	}
+
+	return nil
 }
 
+// implement button template to template message is for sending line
 func (btn *Buttons) ButtonsTemplate() *linebot.TemplateMessage {
 	return linebot.NewTemplateMessage("buttons template",
 		&linebot.ButtonsTemplate{

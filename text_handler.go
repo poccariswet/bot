@@ -12,6 +12,14 @@ func textHandler(message *linebot.TextMessage, replyToken string) error {
 	switch message.Text {
 	case "buttons":
 		btn := template.NewButtons()
+		if err := btn.AddButtons(
+			linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", "", "hello こんにちは"),
+			linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
+			linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
+			linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
+		); err != nil {
+			return err
+		}
 		msg = btn.ButtonsTemplate()
 
 	case "confirm":
@@ -43,16 +51,16 @@ func textHandler(message *linebot.TextMessage, replyToken string) error {
 	case "flex json":
 		//TODO: adding flex_json template func
 
-		contents, err := linebot.UnmarshalFlexMessageJSON([]byte(jsonString))
-		if err != nil {
-			return err
-		}
-		if _, err := bot.ReplyMessage(
-			replyToken,
-			linebot.NewFlexMessage("Flex message alt text", contents),
-		).Do(); err != nil {
-			return err
-		}
+		//		contents, err := linebot.UnmarshalFlexMessageJSON([]byte(jsonString))
+		//		if err != nil {
+		//			return err
+		//		}
+		//		if _, err := bot.ReplyMessage(
+		//			replyToken,
+		//			linebot.NewFlexMessage("Flex message alt text", contents),
+		//		).Do(); err != nil {
+		//			return err
+		//		}
 
 	default:
 		log.Println(message.Text)

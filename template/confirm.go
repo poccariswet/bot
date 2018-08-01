@@ -8,19 +8,35 @@ type Confirms struct {
 	Right linebot.TemplateAction
 }
 
+// new default confirms template
 func NewConfirms() Confirms {
-	var c Confirms
-	c.Title = "confirm"
-	c.Left = &linebot.MessageTemplateAction{
-		Label: "1",
-		Text:  "Yes",
+	return Confirms{
+		Title: "confirm",
+		Left: &linebot.MessageTemplateAction{
+			Label: "1",
+			Text:  "Yes",
+		},
+		Right: &linebot.MessageTemplateAction{
+			Label: "2",
+			Text:  "No",
+		},
 	}
+}
 
-	c.Right = &linebot.MessageTemplateAction{
-		Label: "2",
-		Text:  "No",
+// set left template action
+func (c *Confirms) SetLeft(label, text string) {
+	c.Left = &linebot.MessageTemplateAction{
+		Label: label,
+		Text:  text,
 	}
-	return c
+}
+
+// set right template action
+func (c *Confirms) SetRight(label, text string) {
+	c.Right = &linebot.MessageTemplateAction{
+		Label: label,
+		Text:  text,
+	}
 }
 
 func (c *Confirms) ConfirmsTemplate() *linebot.TemplateMessage {

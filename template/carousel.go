@@ -10,15 +10,18 @@ type Carousel struct {
 	Columns []*linebot.CarouselColumn
 }
 
-func NewColumns(btn []Buttons) (Carousel, error) {
+func NewCarousel() *Carousel {
+	return &Carousel{}
+}
+
+func (c *Carousel) SetColumns(btn ...*Buttons) error {
 	if len(btn) > 10 {
-		return Carousel{}, errors.New("columns must not be more than 10 items")
+		return errors.New("columns must not be more than 10 items")
 	}
 
-	var c Carousel
 	for _, v := range btn {
 		if len(v.Button) > 3 {
-			return Carousel{}, errors.New("button actions must not be more than 3 items")
+			return errors.New("button actions must not be more than 3 items")
 		}
 
 		c.Columns = append(c.Columns, &linebot.CarouselColumn{
@@ -28,10 +31,11 @@ func NewColumns(btn []Buttons) (Carousel, error) {
 			Actions:           v.Button,
 		})
 	}
-	return c, nil
+
+	return nil
 }
 
-func (c Carousel) CarouselTemplate() *linebot.TemplateMessage {
+func (c *Carousel) CarouselTemplate() *linebot.TemplateMessage {
 	return linebot.NewTemplateMessage("carousel",
 		&linebot.CarouselTemplate{
 			Columns: c.Columns,

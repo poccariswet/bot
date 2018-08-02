@@ -27,13 +27,20 @@ func textHandler(message *linebot.TextMessage, replyToken string) error {
 		msg = confirm.ConfirmsTemplate()
 
 	case "carousel":
-		var btns []template.Buttons
-		btns = append(btns, template.NewButtons())
-		btns = append(btns, template.NewButtons())
-		carousel, err := template.NewColumns(btns)
-		if err != nil {
+		carousel := template.NewCarousel()
+		btn := template.NewButtons()
+		if err := btn.AddButtons(
+			linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", "", "hello こんにちは"),
+			linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
+			linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
+		); err != nil {
 			return err
 		}
+
+		if err := carousel.SetColumns(btn, btn); err != nil {
+			return err
+		}
+		log.Println(carousel.Columns)
 		msg = carousel.CarouselTemplate()
 
 	case "image carousel":

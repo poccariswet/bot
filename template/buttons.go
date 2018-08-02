@@ -14,8 +14,8 @@ type Buttons struct {
 }
 
 // new default buttons template
-func NewButtons() Buttons {
-	return Buttons{
+func NewButtons() *Buttons {
+	return &Buttons{
 		ImagePath: "https://cdn2.iconfinder.com/data/icons/file-8/128/file_3-512.png",
 		Title:     "title",
 		SubTitle:  "sub title",

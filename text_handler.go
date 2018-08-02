@@ -44,13 +44,11 @@ func textHandler(message *linebot.TextMessage, replyToken string) error {
 		msg = carousel.CarouselTemplate()
 
 	case "image carousel":
-		var col []template.ImageColumns
-		col = append(col, template.NewImageColumns())
-		col = append(col, template.NewImageColumns())
-		col = append(col, template.NewImageColumns())
+		col := template.NewImageColumns()
+		col.SetImageAction(linebot.NewURITemplateAction("Go to LINE", "https://line.me"))
 
-		c, err := template.NewImageCarousel(col)
-		if err != nil {
+		c := template.NewImageCarousel()
+		if err := c.SetImageCarousel(col, col, col); err != nil {
 			return err
 		}
 		msg = c.CarouselTemplate()

@@ -11,23 +11,37 @@ type ImageColumns struct {
 	Action    linebot.TemplateAction
 }
 
-func NewImageColumns() ImageColumns {
-	var col ImageColumns
-	col.ImagePath = "https://tfsassets.azureedge.net/sampletry.jpg"
-	col.Action = linebot.NewURITemplateAction("Go to LINE", "https://line.me")
-	return col
+// new defaul image columns template
+func NewImageColumns() *ImageColumns {
+	return &ImageColumns{
+		ImagePath: "https://cdn2.iconfinder.com/data/icons/file-8/128/file_3-512.png",
+		Action:    nil,
+	}
+}
+
+// set Image columns
+func (c *ImageColumns) SetImageAction(action linebot.TemplateAction) {
+	c.Action = action
+}
+
+func (c *ImageColumns) SetImagePath(imagepath string) {
+	c.ImagePath = imagepath
 }
 
 type ImageCarousel struct {
 	Columns []*linebot.ImageCarouselColumn
 }
 
-func NewImageCarousel(col []ImageColumns) (ImageCarousel, error) {
+func NewImageCarousel() *ImageCarousel {
+	return &ImageCarousel{}
+}
+
+// set image carousel
+func (c *ImageCarousel) SetImageCarousel(col ...*ImageColumns) error {
 	if len(col) > 10 {
-		return ImageCarousel{}, errors.New("columns must not be more than 10 items")
+		return errors.New("columns must not be more than 10 items")
 	}
 
-	var c ImageCarousel
 	for _, v := range col {
 		c.Columns = append(c.Columns, &linebot.ImageCarouselColumn{
 			ImageURL: v.ImagePath,
@@ -35,7 +49,7 @@ func NewImageCarousel(col []ImageColumns) (ImageCarousel, error) {
 		})
 	}
 
-	return c, nil
+	return nil
 }
 
 func (c ImageCarousel) CarouselTemplate() *linebot.TemplateMessage {

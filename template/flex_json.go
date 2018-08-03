@@ -1,45 +1,59 @@
 package template
 
-type Container struct {
+import "github.com/line/line-bot-sdk-go/linebot"
+
+type Box struct {
 	Type   string
-	hero   Hero
-	body   Body
-	footer Footer
+	Layout string
 }
 
-type Hero struct {
-	Type        string
-	Url         string
-	Size        string
-	AspectRatio string
-	AspectMode  string
-	Action      action
+type BubbleContainer struct {
+	Type   string
+	Header BoxComponent
+	Hero   ImageComponent
+	Body   BoxComponent
+	Footer BoxComponent
+	Styles BubbleStyle
 }
 
-type action struct {
-	Type string
-	uri  string
+type FlexComponent interface {
+	FlexComponent()
 }
 
-type Body struct {
-	Type     string
-	Layout   string
-	Contents []contents
+type BoxComponent struct {
+	Type     string          `json:"type"`
+	Layout   string          `json:"layout"`
+	Contents []FlexComponent `json:"contents"`
+	Flex     int             `json:"flex,omitempty"`
+	Spacing  string          `json:"spacing,omitempty"`
+	Margin   string          `json:"margin,omitempty"`
 }
 
-type contents struct {
-	Type     string
-	Text     string
-	Weight   string
-	Size     string
-	Contents []contents
+type ImageComponent struct {
+	Type            string                 `json:"type"`
+	URL             string                 `json:"url"`
+	Flex            int                    `json:"flex,omitempty"`
+	Margin          string                 `json:"margin,omitempty"`
+	Align           string                 `json:"align,omitempty"`
+	Gravity         string                 `json:"gravity,omitempty"`
+	Size            string                 `json:"size,omitempty"`
+	AspectRatio     string                 `json:"aspectRatio,omitempty"`
+	AspectMode      string                 `json:"aspectMode,omitempty"`
+	BackgroundColor string                 `json:"backgroundColor,omitempty"`
+	Action          linebot.TemplateAction `json:"action,omitempty"`
 }
-type Footer struct {
-	Type     string
-	Layout   string
-	Spacing  string
-	Contents []contents
-	Flex     string
+
+type BubbleStyle struct {
+	Header BlockStyle `json:"header,omitempty"`
+	Hero   BlockStyle `json:"hero,omitempty"`
+	Body   BlockStyle `json:"body,omitempty"`
+	Footer BlockStyle `json:"footer,omitempty"`
+}
+
+type BlockStyle struct {
+	BackgroundColor string `json:"backgroundColor,omitempty"`
+	Separator       bool   `json:"separator,omitempty"`
+	SeparatorColor  string `json:"separatorColor,omitempty"`
 }
 
 var jsonString = `{

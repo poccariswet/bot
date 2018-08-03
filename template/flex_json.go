@@ -56,6 +56,12 @@ type BlockStyle struct {
 	SeparatorColor  string `json:"separatorColor,omitempty"`
 }
 
+// FlexComponent implements FlexComponent interface
+func (*BoxComponent) FlexComponent() {}
+
+// FlexComponent implements FlexComponent interface
+func (*ImageComponent) FlexComponent() {}
+
 var jsonString = `{
   "type": "bubble",
   "hero": {

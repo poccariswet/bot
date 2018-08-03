@@ -1,10 +1,45 @@
 package template
 
 type Container struct {
-	buble  Buble
+	Type   string
 	hero   Hero
 	body   Body
 	footer Footer
+}
+
+type Hero struct {
+	Type        string
+	Url         string
+	Size        string
+	AspectRatio string
+	AspectMode  string
+	Action      action
+}
+
+type action struct {
+	Type string
+	uri  string
+}
+
+type Body struct {
+	Type     string
+	Layout   string
+	Contents []contents
+}
+
+type contents struct {
+	Type     string
+	Text     string
+	Weight   string
+	Size     string
+	Contents []contents
+}
+type Footer struct {
+	Type     string
+	Layout   string
+	Spacing  string
+	Contents []contents
+	Flex     string
 }
 
 var jsonString = `{

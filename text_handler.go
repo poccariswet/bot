@@ -56,16 +56,16 @@ func textHandler(message *linebot.TextMessage, replyToken string) error {
 	case "flex json":
 		//TODO: adding flex_json template func
 
-		//		contents, err := linebot.UnmarshalFlexMessageJSON([]byte(jsonString))
-		//		if err != nil {
-		//			return err
-		//		}
-		//		if _, err := bot.ReplyMessage(
-		//			replyToken,
-		//			linebot.NewFlexMessage("Flex message alt text", contents),
-		//		).Do(); err != nil {
-		//			return err
-		//		}
+		contents, err := linebot.UnmarshalFlexMessageJSON([]byte(template.jsonString))
+		if err != nil {
+			return err
+		}
+		if _, err := bot.ReplyMessage(
+			replyToken,
+			linebot.NewFlexMessage("Flex message alt text", contents),
+		).Do(); err != nil {
+			return err
+		}
 
 	default:
 		log.Println(message.Text)

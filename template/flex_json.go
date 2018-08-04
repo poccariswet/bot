@@ -2,11 +2,6 @@ package template
 
 import "github.com/line/line-bot-sdk-go/linebot"
 
-type Box struct {
-	Type   string
-	Layout string
-}
-
 type BubbleContainer struct {
 	Type   string
 	Header BoxComponent

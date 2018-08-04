@@ -57,6 +57,32 @@ func (*BoxComponent) FlexComponent() {}
 // FlexComponent implements FlexComponent interface
 func (*ImageComponent) FlexComponent() {}
 
+func NewFlexMessage() *BubbleContainer {
+	return &BubbleContainer{
+		Type: "buble",
+	}
+}
+
+func SetHeader() error {
+	return nil
+}
+
+func SetHero() error {
+	return nil
+}
+
+func SetBody() error {
+	return nil
+}
+
+func SetFooter() error {
+	return nil
+}
+
+func SetStyles() error {
+	return nil
+}
+
 var jsonString = `{
   "type": "bubble",
   "hero": {

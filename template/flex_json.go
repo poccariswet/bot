@@ -63,23 +63,23 @@ func NewFlexMessage() *BubbleContainer {
 	}
 }
 
-func SetHeader() error {
+func (bc *BubbleContainer) SetHeader() error {
 	return nil
 }
 
-func SetHero() error {
+func (bc *BubbleContainer) SetHero() error {
 	return nil
 }
 
-func SetBody() error {
+func (bc *BubbleContainer) SetBody() error {
 	return nil
 }
 
-func SetFooter() error {
+func (bc *BubbleContainer) SetFooter() error {
 	return nil
 }
 
-func SetStyles() error {
+func (bc *BubbleContainer) SetStyles() error {
 	return nil
 }
 

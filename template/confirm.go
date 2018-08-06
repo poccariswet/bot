@@ -12,11 +12,11 @@ type Confirms struct {
 func NewConfirms() Confirms {
 	return Confirms{
 		Title: "confirm",
-		Left: &linebot.MessageTemplateAction{
+		Left: &linebot.MessageAction{
 			Label: "1",
 			Text:  "Yes",
 		},
-		Right: &linebot.MessageTemplateAction{
+		Right: &linebot.MessageAction{
 			Label: "2",
 			Text:  "No",
 		},
@@ -25,7 +25,7 @@ func NewConfirms() Confirms {
 
 // set left template action
 func (c *Confirms) SetLeft(label, text string) {
-	c.Left = &linebot.MessageTemplateAction{
+	c.Left = &linebot.MessageAction{
 		Label: label,
 		Text:  text,
 	}
@@ -33,7 +33,7 @@ func (c *Confirms) SetLeft(label, text string) {
 
 // set right template action
 func (c *Confirms) SetRight(label, text string) {
-	c.Right = &linebot.MessageTemplateAction{
+	c.Right = &linebot.MessageAction{
 		Label: label,
 		Text:  text,
 	}

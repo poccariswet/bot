@@ -1,6 +1,10 @@
 package template
 
-import "github.com/line/line-bot-sdk-go/linebot"
+import (
+	"encoding/json"
+
+	"github.com/line/line-bot-sdk-go/linebot"
+)
 
 type BubbleContainer struct {
 	Type   string
@@ -38,6 +42,39 @@ type ImageComponent struct {
 	Action          linebot.TemplateAction `json:"action,omitempty"`
 }
 
+type TextComponent struct {
+	Type    string                 `json:"type"`
+	Text    string                 `json:"text"`
+	Flex    int                    `json:"flex,omitempty"`
+	Margin  string                 `json:"margin,omitempty"`
+	Size    string                 `json:"size,omitempty"`
+	Align   string                 `json:"align,omitempty"`
+	Gravity string                 `json:"gravity,omitempty"`
+	Wrap    bool                   `json:"wrap,omitempty"`
+	Weight  string                 `json:"weight,omitempty"`
+	Color   string                 `json:"color,omitempty"`
+	Action  linebot.TemplateAction `json:"action,omitempty"`
+}
+
+type ButtonComponent struct {
+	Type    string                 `json:"type"`
+	Action  linebot.TemplateAction `json:"action"`
+	Flex    int                    `json:"flex,omitempty"`
+	Margin  string                 `json:"margin,omitempty"`
+	Height  string                 `json:"height,omitempty"`
+	Style   string                 `json:"style,omitempty"`
+	Color   string                 `json:"color,omitempty"`
+	Gravity string                 `json:"gravity,omitempty"`
+}
+
+type IconComponent struct {
+	Type        string `json:"type"`
+	URL         string `json:"url"`
+	Margin      string `json:"margin,omitempty"`
+	Size        string `json:"size,omitempty"`
+	AspectRatio string `json:"aspectRatio,omitempty"`
+}
+
 type BubbleStyle struct {
 	Header BlockStyle `json:"header,omitempty"`
 	Hero   BlockStyle `json:"hero,omitempty"`
@@ -57,179 +94,56 @@ func (*BoxComponent) FlexComponent() {}
 // FlexComponent implements FlexComponent interface
 func (*ImageComponent) FlexComponent() {}
 
+// FlexComponent implements FlexComponent interface
+func (*TextComponent) FlexComponent() {}
+
+// FlexComponent implements FlexComponent interface
+func (*IconComponent) FlexComponent() {}
+
 func NewFlexMessage() *BubbleContainer {
 	return &BubbleContainer{
 		Type: "buble",
 	}
 }
 
-func (bc *BubbleContainer) SetHeader() error {
+func (bc *BubbleContainer) SetHeader(box BoxComponent) error {
+	bc.Header = box
 	return nil
 }
 
-func (bc *BubbleContainer) SetHero() error {
+func (bc *BubbleContainer) SetHero(img ImageComponent) error {
+	bc.Hero = img
 	return nil
 }
 
-func (bc *BubbleContainer) SetBody() error {
+func (bc *BubbleContainer) SetBody(box BoxComponent) error {
+	bc.Body = box
 	return nil
 }
 
-func (bc *BubbleContainer) SetFooter() error {
+func (bc *BubbleContainer) SetFooter(box BoxComponent) error {
+	bc.Footer = box
 	return nil
 }
 
-func (bc *BubbleContainer) SetStyles() error {
+func (bc *BubbleContainer) SetStyles(styles BubbleStyle) error {
+	bc.Styles = styles
 	return nil
 }
 
-var jsonString = `{
-  "type": "bubble",
-  "hero": {
-    "type": "image",
-    "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
-    "size": "full",
-    "aspectRatio": "20:13",
-    "aspectMode": "cover",
-    "action": {
-      "type": "uri",
-      "uri": "http://linecorp.com/"
-    }
-  },
-  "body": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
-      {
-        "type": "text",
-        "text": "Brown Cafe",
-        "weight": "bold",
-        "size": "xl"
-      },
-      {
-        "type": "box",
-        "layout": "baseline",
-        "margin": "md",
-        "contents": [
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
-          },
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
-          },
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
-          },
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
-          },
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gray_star_28.png"
-          },
-          {
-            "type": "text",
-            "text": "4.0",
-            "size": "sm",
-            "color": "#999999",
-            "margin": "md",
-            "flex": 0
-          }
-        ]
-      },
-      {
-        "type": "box",
-        "layout": "vertical",
-        "margin": "lg",
-        "spacing": "sm",
-        "contents": [
-          {
-            "type": "box",
-            "layout": "baseline",
-            "spacing": "sm",
-            "contents": [
-              {
-                "type": "text",
-                "text": "Place",
-                "color": "#aaaaaa",
-                "size": "sm",
-                "flex": 1
-              },
-              {
-                "type": "text",
-                "text": "Miraina Tower, 4-1-6 Shinjuku, Tokyo",
-                "wrap": true,
-                "color": "#666666",
-                "size": "sm",
-                "flex": 5
-              }
-            ]
-          },
-          {
-            "type": "box",
-            "layout": "baseline",
-            "spacing": "sm",
-            "contents": [
-              {
-                "type": "text",
-                "text": "Time",
-                "color": "#aaaaaa",
-                "size": "sm",
-                "flex": 1
-              },
-              {
-                "type": "text",
-                "text": "10:00 - 23:00",
-                "wrap": true,
-                "color": "#666666",
-                "size": "sm",
-                "flex": 5
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "footer": {
-    "type": "box",
-    "layout": "vertical",
-    "spacing": "sm",
-    "contents": [
-      {
-        "type": "button",
-        "style": "link",
-        "height": "sm",
-        "action": {
-          "type": "uri",
-          "label": "CALL",
-          "uri": "https://linecorp.com"
-        }
-      },
-      {
-        "type": "button",
-        "style": "link",
-        "height": "sm",
-        "action": {
-          "type": "uri",
-          "label": "WEBSITE",
-          "uri": "https://linecorp.com"
-        }
-      },
-      {
-        "type": "spacer",
-        "size": "sm"
-      }
-    ],
-    "flex": 0
-  }
-}`
+func (bc *BubbleContainer) FlexTemplate() (*linebot.FlexMessage, error) {
+	data, err := json.Marshal(bc)
+	if err != nil {
+		return nil, err
+	}
+
+	contents, err := linebot.UnmarshalFlexMessageJSON(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return linebot.NewFlexMessage(
+		"Flex Message",
+		contents,
+	), nil
+}

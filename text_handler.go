@@ -13,10 +13,10 @@ func textHandler(message *linebot.TextMessage, replyToken string) error {
 	case "buttons":
 		btn := template.NewButtons()
 		if err := btn.AddButtons(
-			linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", "", "hello こんにちは"),
-			linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
-			linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
-			linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
+			linebot.NewPostbackAction("Say hello1", "hello こんにちは", "", "hello こんにちは"),
+			linebot.NewPostbackAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
+			linebot.NewPostbackAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
+			linebot.NewPostbackAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
 		); err != nil {
 			return err
 		}
@@ -30,9 +30,9 @@ func textHandler(message *linebot.TextMessage, replyToken string) error {
 		carousel := template.NewCarousel()
 		btn := template.NewButtons()
 		if err := btn.AddButtons(
-			linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", "", "hello こんにちは"),
-			linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
-			linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
+			linebot.NewPostbackAction("Say hello1", "hello こんにちは", "", "hello こんにちは"),
+			linebot.NewPostbackAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
+			linebot.NewPostbackAction("言 hello2", "hello こんにちは", "hello こんにちは", ""),
 		); err != nil {
 			return err
 		}
@@ -45,7 +45,7 @@ func textHandler(message *linebot.TextMessage, replyToken string) error {
 
 	case "image carousel":
 		col := template.NewImageColumns()
-		col.SetImageAction(linebot.NewURITemplateAction("Go to LINE", "https://line.me"))
+		col.SetImageAction(linebot.NewURIAction("Go to LINE", "https://line.me"))
 
 		c := template.NewImageCarousel()
 		if err := c.SetImageCarousel(col, col, col); err != nil {
@@ -54,16 +54,9 @@ func textHandler(message *linebot.TextMessage, replyToken string) error {
 		msg = c.CarouselTemplate()
 
 	case "flex json":
-		//TODO: adding flex_json template func
-
-		contents, err := linebot.UnmarshalFlexMessageJSON([]byte(template.jsonString))
+		f := template.NewFlexMessage()
+		msg, err = f.FlexTemplate()
 		if err != nil {
-			return err
-		}
-		if _, err := bot.ReplyMessage(
-			replyToken,
-			linebot.NewFlexMessage("Flex message alt text", contents),
-		).Do(); err != nil {
 			return err
 		}
 

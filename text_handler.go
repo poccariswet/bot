@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/line/line-bot-sdk-go/linebot"
-	"github.com/soeyusuke/bot/template"
+	"github.com/poccariswet/bot/template"
 )
 
 func textHandler(message *linebot.TextMessage, replyToken string) error {

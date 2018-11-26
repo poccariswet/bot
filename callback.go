@@ -8,6 +8,7 @@ import (
 )
 
 func Callback(w http.ResponseWriter, req *http.Request) {
+	log.Println(req.Host)
 	events, err := bot.ParseRequest(req)
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
@@ -19,6 +20,7 @@ func Callback(w http.ResponseWriter, req *http.Request) {
 
 	for _, event := range events {
 		log.Printf("Got event %v", event) //log of event
+		log.Println(event.Source.UserID)
 		switch event.Type {
 		case linebot.EventTypeMessage:
 			switch message := event.Message.(type) {

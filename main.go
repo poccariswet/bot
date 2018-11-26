@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/line/line-bot-sdk-go/linebot"
-	"github.com/soeyusuke/bot/auth"
+	"github.com/poccariswet/bot/auth"
 )
 
 var bot *linebot.Client
